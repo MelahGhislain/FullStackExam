@@ -16,18 +16,6 @@ module.exports = () =>{
             res.status(500).send({status: "error", msg: "Matricule already exist", err})
         }
     })
-    // router.get('/student/attendace', async(req, res)=>{
-    //     try{
-    //         const students = await Student.find({}).sort("-createdAt")
-
-    //         const studentsPresent = students.filter(student.)
-
-
-    //         if(students) res.status(200).json({status: "success", data: students})
-    //     }catch(err){
-    //         res.status(500).send({status: "error", msg: "Could not get students", err})
-    //     }
-    // })
     router.get('/students', async(req, res)=>{
         try{
             const students = await Student.find({}).sort("-createdAt")
@@ -45,24 +33,27 @@ module.exports = () =>{
             res.status(500).send({status: "error", msg: "Could not update students", err})
         }
     })
-    router.put('/students/:id/attendance', async(req, res)=>{
-        try{
-            const { attendance } = req.body
-            console.log(attendance)
-            console.log("===================================================")
-            const student = await Student.findOneAndUpdate({_id: req.params.id}, {$addToSet:{ attendance }}, {new: true})
-            console.log(student)
-            if(student) res.status(200).json({status: "success", data: student})
-        }catch(err){
-            res.status(500).send({status: "error", msg: "Could not update student", err})
-        }
-    })
+   
     router.delete('/students/:id', async(req, res)=>{
         try{
             const student = await Student.findByIdAndRemove(req.params.id)
             if(student) res.status(200).json({status: "success", data: student})
         }catch(err){
             res.status(500).send({status: "error", msg: "Could not delete student", err})
+        }
+    })
+    router.get('/students/delete', async(req, res)=>{
+        try{
+            const students = await Student.find({})
+            
+            students.map( async (student) =>{
+                // console.log(student._id)
+                await Student.findByIdAndRemove(student._id)
+            })
+           
+            res.status(200).json({status: "success", msg: "students deleted successfully"})
+        }catch(err){
+            res.status(500).send({status: "error", msg: "Could not delete students", err})
         }
     })
 

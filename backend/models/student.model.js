@@ -11,6 +11,10 @@ const taskSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
+    status:{
+        type: Number,
+
+    },
     present:{
         type: Boolean,
     },
